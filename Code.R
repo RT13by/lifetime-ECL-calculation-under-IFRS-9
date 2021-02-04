@@ -1,13 +1,13 @@
-# Ввод исходных данных (темпа прироста реального ВВП (GDPr), PIT PD в разрезе групп кредитного рейтинга (Х1…Х9)) 
-# в переменную (input) посредством R ,приведения их в пригодный
-# для обработки вид и проверки их корректности
+# Г‚ГўГ®Г¤ ГЁГ±ГµГ®Г¤Г­Г»Гµ Г¤Г Г­Г­Г»Гµ (ГІГҐГ¬ГЇГ  ГЇГ°ГЁГ°Г®Г±ГІГ  Г°ГҐГ Г«ГјГ­Г®ГЈГ® Г‚Г‚ГЏ (GDPr), PIT PD Гў Г°Г Г§Г°ГҐГ§ГҐ ГЈГ°ГіГЇГЇ ГЄГ°ГҐГ¤ГЁГІГ­Г®ГЈГ® Г°ГҐГ©ГІГЁГ­ГЈГ  (Г•1вЂ¦Г•9)) 
+# Гў ГЇГҐГ°ГҐГ¬ГҐГ­Г­ГіГѕ (input) ГЇГ®Г±Г°ГҐГ¤Г±ГІГўГ®Г¬ R ,ГЇГ°ГЁГўГҐГ¤ГҐГ­ГЁГї ГЁГµ Гў ГЇГ°ГЁГЈГ®Г¤Г­Г»Г©
+# Г¤Г«Гї Г®ГЎГ°Г ГЎГ®ГІГЄГЁ ГўГЁГ¤ ГЁ ГЇГ°Г®ГўГҐГ°ГЄГЁ ГЁГµ ГЄГ®Г°Г°ГҐГЄГІГ­Г®Г±ГІГЁ
 # I:
 input <-read.csv("input_data.csv")
 library(dplyr)
 dplyr::glimpse(input)
 
-# Для визуальной оценки целесообразно построение графиков переменных 
-#(уровня реального ВВП и PIT PD на примере 9 группы кредитного рейтинга)
+# Г„Г«Гї ГўГЁГ§ГіГ Г«ГјГ­Г®Г© Г®Г¶ГҐГ­ГЄГЁ Г¶ГҐГ«ГҐГ±Г®Г®ГЎГ°Г Г§Г­Г® ГЇГ®Г±ГІГ°Г®ГҐГ­ГЁГҐ ГЈГ°Г ГґГЁГЄГ®Гў ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г»Гµ 
+#(ГіГ°Г®ГўГ­Гї Г°ГҐГ Г«ГјГ­Г®ГЈГ® Г‚Г‚ГЏ ГЁ PIT PD Г­Г  ГЇГ°ГЁГ¬ГҐГ°ГҐ 9 ГЈГ°ГіГЇГЇГ» ГЄГ°ГҐГ¤ГЁГІГ­Г®ГЈГ® Г°ГҐГ©ГІГЁГ­ГЈГ )
 # II:
 dates<-seq(as.Date("2016/1/1"), as.Date("2018/10/1"), by = "quarter")
 plot(dates, input$X9, type="o", main="DR 9 group",
@@ -15,47 +15,47 @@ ylab="Default rate",xlab="Time", col="blue")
 plot(dates, input$GDPr, type="o", main="GDP growth rate",
 ylab="Percent",xlab="Time", col="blue")
 
-# Построение гистограмм временных рядов уровня реального  ВВП и PIT PD на примере 9 группы кредитного рейтинга
+# ГЏГ®Г±ГІГ°Г®ГҐГ­ГЁГҐ ГЈГЁГ±ГІГ®ГЈГ°Г Г¬Г¬ ГўГ°ГҐГ¬ГҐГ­Г­Г»Гµ Г°ГїГ¤Г®Гў ГіГ°Г®ГўГ­Гї Г°ГҐГ Г«ГјГ­Г®ГЈГ®  Г‚Г‚ГЏ ГЁ PIT PD Г­Г  ГЇГ°ГЁГ¬ГҐГ°ГҐ 9 ГЈГ°ГіГЇГЇГ» ГЄГ°ГҐГ¤ГЁГІГ­Г®ГЈГ® Г°ГҐГ©ГІГЁГ­ГЈГ 
 # III:
 library(ggplot2)
 hist.adverts <-ggplot(input, aes(input$X9))+
 geom_histogram(aes (y = ..density..))+theme_bw()+
-labs(x = "DR 9", y = "Плотность")
+labs(x = "DR 9", y = "Density")
 hist.adverts
 hist.adverts + stat_function(fun = dnorm, args = list(mean = mean(input$X9, na.rm = TRUE),
 sd = sd(input$X9, na.rm = TRUE)), color  = 'red')
 
 hist.adverts <-ggplot(input, aes(input$GDPr))+
 geom_histogram(aes (y = ..density..))+theme_bw()+
-labs(x = "GDPr", y = "Плотность")
+labs(x = "GDPr", y = "Density")
 hist.adverts
 hist.adverts + stat_function(fun = dnorm, args = list(mean = mean(input$GDPr, na.rm = TRUE),
 sd = sd(input$GDPr, na.rm = TRUE)), color  = 'red')
 
 
-# KPSS-тест
+# KPSS-ГІГҐГ±ГІ
 # IV:
 library(tseries)
 kpss.test(input$X9, null = "Trend", lshort = TRUE)
 kpss.test(input$GDPr, null = "Trend", lshort = TRUE)
 
-# Расчет линейной регрессии осуществлен на примере 9 группы кредитного рейтинга
+# ГђГ Г±Г·ГҐГІ Г«ГЁГ­ГҐГ©Г­Г®Г© Г°ГҐГЈГ°ГҐГ±Г±ГЁГЁ Г®Г±ГіГ№ГҐГ±ГІГўГ«ГҐГ­ Г­Г  ГЇГ°ГЁГ¬ГҐГ°ГҐ 9 ГЈГ°ГіГЇГЇГ» ГЄГ°ГҐГ¤ГЁГІГ­Г®ГЈГ® Г°ГҐГ©ГІГЁГ­ГЈГ 
 # V:
 fit <-lm(X9~GDPr, data=input)
 summary(fit)
 confint(fit)
 
-# Оценка допущений метода наименьших квадратов 
+# ГЋГ¶ГҐГ­ГЄГ  Г¤Г®ГЇГіГ№ГҐГ­ГЁГ© Г¬ГҐГІГ®Г¤Г  Г­Г ГЁГ¬ГҐГ­ГјГёГЁГµ ГЄГўГ Г¤Г°Г ГІГ®Гў 
 # VI:
 library(gvlma)
 summary(gvlma(fit))
 
-# Тест Дарбина-Уотсона
+# Г’ГҐГ±ГІ Г„Г Г°ГЎГЁГ­Г -Г“Г®ГІГ±Г®Г­Г 
 # VII:
 library(car) 
 durbinWatsonTest(fit)
 
-# Тест Бройша-Годфри
+# Г’ГҐГ±ГІ ГЃГ°Г®Г©ГёГ -ГѓГ®Г¤ГґГ°ГЁ
 # VIII:
 library(lmtest)
 bg3 <-bgtest(fit, order = 3)
@@ -63,7 +63,7 @@ bg3
 bg4 <-bgtest(fit, order = 4)
 bg4
 
-# Построение графиков АКФ и ПАКФ
+# ГЏГ®Г±ГІГ°Г®ГҐГ­ГЁГҐ ГЈГ°Г ГґГЁГЄГ®Гў ГЂГЉГ” ГЁ ГЏГЂГЉГ”
 # IX:
 res <- residuals(fit)
 Res
